@@ -131,23 +131,24 @@ final class RepnItem extends AnalysisBase {
      * Generate a HTML representation of the item
      *
      * @param verbose true if additional information is to be generated
-     * @param mesg a String message to add to report
+     * @param mesg a String message to add to report (may be null)
      * @param writer where to write the output
      */
     public void genReport(boolean verbose, String mesg, Writer w) {
-        assert (mesg != null);
         assert (w != null);
 
         this.w = w;
         startDiv("Item", null);
         addLabel(label);
         addString(": " + value);
-        if (mesg.length() < 40) {
-            addString(mesg);
-        } else if (verbose) {
-            addTag("<pre>");
-            addString(mesg);
-            addTag("</pre>\n");
+        if (mesg != null) {
+            if (mesg.length() < 40) {
+                addString(mesg);
+            } else if (verbose) {
+                addTag("<pre>");
+                addString(mesg);
+                addTag("</pre>\n");
+            }
         }
         if (hasErrors() || hasWarnings()) {
             addTag("<ul>\n");

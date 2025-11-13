@@ -176,10 +176,13 @@ public class VEOAnalysis {
      * 20250521 4.29 Testing for contextPath/ContextPath in both AS4578 and AGLS metadata, in both vers & versterms namespaces
      * 20251022 4.30 Tightened up testing for VEOContentSignature?.xml and VEOHistorySignature?.xml
      * 20251022 4.31 Tested for errors in signature algorithm (RepnSignature) - hyphen in hash function (e.g. SHA-512) and no encryption (i.e. no 'with')
+     * 20251113 4.32 Supported a null message in RepnItem.genReport()
+     * 20251113 4.33 Removed recursive call in RepnMetadataPackage.rdfModel2String()
+     * 20251113.4.34 Test for signature filenames tightened to ensure the names contain a number
      * </pre>
      */
     static String version() {
-        return ("4.31");
+        return ("4.34");
     }
 
     static String copyright = "Copyright 2015-2024 Public Record Office Victoria";

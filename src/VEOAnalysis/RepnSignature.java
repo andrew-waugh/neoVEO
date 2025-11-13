@@ -81,6 +81,7 @@ public class RepnSignature extends RepnXML {
         Path file;          // the signature file
         Path schema;        // the source of the VEO*Signature?.xml schema
         RepnItem ri;
+        String filename;
         int i;
         
         assert(veoDir != null);
@@ -106,18 +107,26 @@ public class RepnSignature extends RepnXML {
             return;
         }
         schema = schemaDir.resolve("vers3-signature.xsd");
+        filename = file.getFileName().toString();
 
-        // work out whether we are validating the content file or the history file
+        // does the named file exist?
         if (!Files.exists(file)) {
             addError(new VEOFailure(CLASSNAME, 2, id, "Signature file '" + file.toString() + "' does not exist"));
             return;
         }
-        if (Pattern.matches("^VEOContentSignature(\\d)+.xml$", file.getFileName().toString())) {
+        
+        // Check that signature file name is valid according to the standard
+        if (!Pattern.matches("^VEO(Content|History)Signature(\\d)+.xml$", filename)) {
+            addWarning(new VEOFailure(CLASSNAME, 3, id, "File name must be of the form 'VEOContentSignature[number].xml' or 'VEOHistorySignature[number].xml' but is '" + file.toString() + "'"));
+        }
+        
+        if (filename.startsWith("VEOContentSignature")) {
             source = veoDir.resolve("VEOContent.xml");
-        } else if (Pattern.matches("^VEOHistorySignature(\\d)+.xml$", file.getFileName().toString())) {
+        } else if (filename.startsWith("VEOHistorySignature")) {
             source = veoDir.resolve("VEOHistory.xml");
         } else {
-            addError(new VEOFailure(CLASSNAME, 3, id, "File name must be of the form 'VEOContentSignature?.xml' or 'VEOHistorySignature?.xml' but is '" + file.toString() + "'"));
+            addError(new VEOFailure(CLASSNAME, 3, id, "Something is very wrong with signature filename ''" + file.toString() + "'"));
+            return;
         }
 
         // parse the signature file and extract the data

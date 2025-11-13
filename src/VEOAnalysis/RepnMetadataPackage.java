@@ -53,6 +53,9 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.rdfxml.xmlinput.DOM2Model;
 import com.hp.hpl.jena.shared.BadURIException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.apache.log4j.Logger;
@@ -940,7 +943,7 @@ class RepnMetadataPackage extends AnalysisBase {
     /**
      * Check that exactly one anzs5478:DateRange element exists, with exactly
      * one anzs5478:StartDate element
-     * 
+     *
      * @param r1 resource
      * @param entityType entityType being looked for
      */
@@ -1008,7 +1011,7 @@ class RepnMetadataPackage extends AnalysisBase {
                 checkLeafProperty(r2, ANZS5478_TERMS_NS, anzs5478NSURI, "DisposalAction", 1, 1, "checkDisposal", nlid);
                 // technically, should check DisposalTriggerDate, and DisposalActionDue, but these are messy and have little value
             }
-            */
+             */
         }
         if (!found) {
             addError("checkDisposal", 4, lid + " must contain one anzs5478:Disposal");
@@ -1019,7 +1022,7 @@ class RepnMetadataPackage extends AnalysisBase {
      * Check that one or more anzs5478:Extent elements exists, each with at
      * exactly one anzs5478:LogicalSize and anzs5478:Units elements, but no
      * anzs5478:PhysicalDimensions or anzs5478:Quantity elements.
-     * 
+     *
      * This method is not called because we ignore it in VERS
      *
      * @param r1 resource
@@ -1176,7 +1179,7 @@ class RepnMetadataPackage extends AnalysisBase {
             checkLeafProperty(r2, VERS_TERMS_NS, versTermsNSURI, "contextPathDomain", 0, 1, "checkContextPath", nlid);
             checkLeafProperty(r2, VERS_TERMS_NS, versTermsNSURI, "contextPathValue", 1, 1, "checkContextPath", nlid);
         }
-        
+
         nlid = lid + "/vers:ContextPath";
         si = r1.listProperties(ResourceFactory.createProperty(versNSURI, "ContextPath"));
         while (si.hasNext()) {
@@ -1774,7 +1777,6 @@ class RepnMetadataPackage extends AnalysisBase {
             sw.append("Failed to generate RDF: ");
             sw.append(bue.getMessage());
             sw.append(" RepnMetadataPackage.addRDF()");
-            sw.append(rdfModel2String());
         }
         return sw.toString();
     }

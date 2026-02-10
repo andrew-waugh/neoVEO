@@ -18,7 +18,8 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystemException;
@@ -414,7 +415,12 @@ public class CreateVEO {
      * <p>
      * Any namespace definitions to be added as attributes to the rdf:RDF
      * element can be passed (this may be null if there are none). The URI
-     * identifying the resource being described can be passed.
+     * identifying the resource being described must be present.
+     * <p>
+     * The resourceId is partially 'validated' - this will generate an error if
+     * it contains an invalid character (e.g. a space). However, an error will
+     * not be generated if a non-Unicode character, instead the character will
+     * be encoded. This is the behaviour of the URI class.
      * <p>
      * The content of the metadata package can be added after this call using
      * the continueMetadataPackage(), addSimpleElementToMP(), or
@@ -428,22 +434,36 @@ public class CreateVEO {
      * @param schemaId the URI identifying the schema of the Metadata Package
      * being commenced.
      * @param namespaceDefns any XML namespace definitions to include in the
-     * rdf:RDF element
+     * rdf:RDF element. May be null.
      * @param resourceId a URI identifying the object being described by the
      * RDF.
      * @throws VEOError if a failure occurred
      */
-    public void startRDFMetadataPackage(String schemaId, String namespaceDefns, URL resourceId) throws VEOError {
+    public void startRDFMetadataPackage(String schemaId, String namespaceDefns, String resourceId) throws VEOError {
         String method = "startRDFMetadataPackage";
+        URI uri;
 
         // sanity checks
         if (schemaId == null) {
             throw new VEOError(classname, method, 2, "schema identifier parameter is null");
         }
+        if (resourceId == null) {
+            throw new VEOError(classname, method, 3, "resource identifier parameter is null");
+        }
+        
+        // check that the resourceId is a valid URI
+        try {
+            uri = new URI(resourceId);
+        } catch (URISyntaxException e) {
+            throw new VEOError(classname, method, 4, "resource identifier parameter is an invalid URI: ", e);
+        }
+        
+        // check that the URI is absolute (as required
+        
         startMetadataPackage(method);
 
         // start metadata package and apply parameters to first template
-        cvc.startRDFMetadataPackage(schemaId, namespaceDefns, resourceId);
+        cvc.startRDFMetadataPackage(schemaId, namespaceDefns, uri);
 
         // now ready to add further metadata packages
         state = VEOState.ADDING_MP;

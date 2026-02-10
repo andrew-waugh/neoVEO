@@ -10,7 +10,6 @@ import VERSCommon.PFXUser;
 import VERSCommon.VEOFatal;
 import VERSCommon.VEOError;
 import java.io.*;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
@@ -297,10 +296,11 @@ public class CreateVEOs {
      * 20240417 3.7 Moved SignVEOs to be a package within neoVEO
      * 20240515 3.8 Can now ZIP a VEO anywhere, and also finalise without ZIPping
      * 20240703 3.9 Moved to latest version of Netbeans resulting in correcting warnings
+     * 20260110 3.10 When explicitly adding an RDF metadata package, the resource identifier is checked as a valid URI
      * </pre>
      */
     static String version() {
-        return ("3.9");
+        return ("3.10");
     }
 
     /**
@@ -963,7 +963,7 @@ public class CreateVEOs {
                         try {
                             veo.startXMLMetadataPackage(tokens[1]);
                         } catch (VEOError e) {
-                            veoFailed(line, "XML-MP ('" + tokens[1] + "')command failed", e);
+                            veoFailed(line, "XML-MP ('" + tokens[1] + "') command failed", e);
                             veo.abandon(debug);
                             veo = null;
                             if (e instanceof VEOFatal) {
@@ -1001,9 +1001,9 @@ public class CreateVEOs {
 
                         // start generic RDF metadata package
                         try {
-                            veo.startRDFMetadataPackage(tokens[1], attributes, new URL(tokens[2]));
+                            veo.startRDFMetadataPackage(tokens[1], attributes, tokens[2]);
                         } catch (VEOError e) {
-                            veoFailed(line, "RDF-MP ('" + tokens[1] + "', '" + tokens[2] + "')command failed", e);
+                            veoFailed(line, "RDF-MP ('" + tokens[1] + "', '" + tokens[2] + "') command failed", e);
                             veo.abandon(debug);
                             veo = null;
                             if (e instanceof VEOFatal) {
@@ -1036,9 +1036,9 @@ public class CreateVEOs {
 
                         // start AGLS (RDF) metadata package
                         try {
-                            veo.startRDFMetadataPackage("http://www.vic.gov.au/blog/wp-content/uploads/2013/11/AGLS-Victoria-2011-V4-Final-2011.pdf", AGLSNamespaces, new URL(tokens[1]));
+                            veo.startRDFMetadataPackage("http://www.vic.gov.au/blog/wp-content/uploads/2013/11/AGLS-Victoria-2011-V4-Final-2011.pdf", AGLSNamespaces, tokens[1]);
                         } catch (VEOError e) {
-                            veoFailed(line, "AGLS-MP ('" + tokens[1] + "')command failed", e);
+                            veoFailed(line, "AGLS-MP ('" + tokens[1] + "') command failed", e);
                             veo.abandon(debug);
                             veo = null;
                             if (e instanceof VEOFatal) {
@@ -1071,9 +1071,9 @@ public class CreateVEOs {
 
                         // start AGLS (RDF) metadata package
                         try {
-                            veo.startRDFMetadataPackage("http://www.prov.vic.gov.au/vers/schema/ANZS5478", ANZS5478Namespaces, new URL(tokens[1]));
+                            veo.startRDFMetadataPackage("http://www.prov.vic.gov.au/vers/schema/ANZS5478", ANZS5478Namespaces, tokens[1]);
                         } catch (VEOError e) {
-                            veoFailed(line, "ANZS5478-MP ('" + tokens[1] + "')command failed", e);
+                            veoFailed(line, "ANZS5478-MP ('" + tokens[1] + "') command failed", e);
                             veo.abandon(debug);
                             veo = null;
                             if (e instanceof VEOFatal) {
@@ -1156,7 +1156,7 @@ public class CreateVEOs {
                         try {
                             veo.addSimpleMetadataElementToMP(tokens[1], attributes, value);
                         } catch (VEOError e) {
-                            veoFailed(line, "ME ('" + tokens[1] + "')command failed", e);
+                            veoFailed(line, "ME ('" + tokens[1] + "') command failed", e);
                             veo.abandon(debug);
                             veo = null;
                             if (e instanceof VEOFatal) {
@@ -1196,7 +1196,7 @@ public class CreateVEOs {
                         try {
                             veo.startComplexMetadataElementInMP(tokens[1], attributes);
                         } catch (VEOError e) {
-                            veoFailed(line, "SME ('" + tokens[1] + "')command failed", e);
+                            veoFailed(line, "SME ('" + tokens[1] + "') command failed", e);
                             veo.abandon(debug);
                             veo = null;
                             if (e instanceof VEOFatal) {
@@ -1229,7 +1229,7 @@ public class CreateVEOs {
                         try {
                             veo.endComplexMetadataElementInMP(tokens[1]);
                         } catch (VEOError e) {
-                            veoFailed(line, "EME ('" + tokens[1] + "')command failed", e);
+                            veoFailed(line, "EME ('" + tokens[1] + "') command failed", e);
                             veo.abandon(debug);
                             veo = null;
                             if (e instanceof VEOFatal) {

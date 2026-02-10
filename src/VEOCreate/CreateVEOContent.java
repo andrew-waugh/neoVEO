@@ -10,7 +10,7 @@ package VEOCreate;
 
 import VERSCommon.VEOError;
 import java.io.*;
-import java.net.URL;
+import java.net.URI;
 import java.nio.file.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -203,10 +203,10 @@ class CreateVEOContent extends CreateXMLDoc {
      *
      * @param semanticId the string to use to identify the meaning of metadata
      * @param namespaceDefns any namespace definitions to include in rdf:RDF
-     * @param entityId a URL identifying the resource the RDF is describing
+     * @param entityId a URI identifying the resource the RDF is describing
      * @throws VEOError
      */
-    public void startRDFMetadataPackage(String semanticId, String namespaceDefns, URL resourceId) throws VEOError {
+    public void startRDFMetadataPackage(String semanticId, String namespaceDefns, URI resourceId) throws VEOError {
 
         startMetadataPackage(semanticId, "http://www.w3.org/1999/02/22-rdf-syntax-ns");
         write(contentsRDFMP1);
@@ -215,7 +215,7 @@ class CreateVEOContent extends CreateXMLDoc {
             write(namespaceDefns);
         }
         write(contentsRDFMP2);
-        write(resourceId.toExternalForm());
+        write(resourceId.toString());
         write(contentsRDFMP3);
         rdfMetadataPackage = true;
         indentDepth = 6;

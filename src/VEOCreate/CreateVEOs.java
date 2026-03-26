@@ -297,10 +297,11 @@ public class CreateVEOs {
      * 20240515 3.8 Can now ZIP a VEO anywhere, and also finalise without ZIPping
      * 20240703 3.9 Moved to latest version of Netbeans resulting in correcting warnings
      * 20260110 3.10 When explicitly adding an RDF metadata package, the resource identifier is checked as a valid URI
+     * 20260326 3.11 Added code to strip out markup added by Excel to TSV files. This was not adopted and is commented out 
      * </pre>
      */
     static String version() {
-        return ("3.10");
+        return ("3.11");
     }
 
     /**
@@ -685,9 +686,15 @@ public class CreateVEOs {
                     continue;
                 }
 
+                // suppress the encoding of fields common in Excel... Excel
+                // starts and ends a field with a " character if it contains
+                // certain characters, and replaces an existing " with ""
                 // encoding of tab in tokens
                 for (i = 0; i < tokens.length; i++) {
                     tokens[i] = tokens[i].replaceAll("<tab>", "\t");
+                    // tokens[i] = tokens[i].replaceAll("^\"", "");
+                    // tokens[i] = tokens[i].replaceAll("\"$", "");
+                    // tokens[i] = tokens[i].replace("\"\"", "\"");
                 }
 
                 switch (tokens[0].toLowerCase().trim()) {
